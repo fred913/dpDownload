@@ -1,0 +1,9 @@
+[
+   {
+      "dir" : [ "C:\\Users\\fred-\\Desktop", "C:\\Users\\fred-\\Downloads", "E:\\DL" ],
+      "host" : "127.0.0.1",
+      "name" : "本地磁盘",
+      "port" : 6808,
+      "token" : "pandownload"
+   }
+]
