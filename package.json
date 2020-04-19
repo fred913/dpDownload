@@ -7,6 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "electron .",
     "pack": "electron-packager .",
+    "build": "electron-packager . --win32",
     "dev": "electron . --dev"
   },
   "author": "Sheng Fan",
