@@ -1,12 +1,35 @@
 const { app, BrowserWindow, Menu } = require('electron')
-const { spawn } = require('child_process')
+const { spawn, exec } = require('child_process')
 const os = require('os')
 const aria2_client = require("./aria2_client")
 var sys_type = null
 
-const devMode = "--dev" == process.argv[2].toString()
+function fatelErrorHandle(err) {
+    console.error(err.stack)
+    // console.error("If this program isn't working at the second time, please try `./dpdownload --close-aria2c`.")
+    process.exit(1)
+}
+
+process.on('uncaughtException', fatelErrorHandle)
+
+process.on('unhandledRejection', fatelErrorHandle)
+
+if (process.argv.includes("--close-aria2c")) {
+    console.warn("Detected --close-aria2c. This will just close aria2c process, and will not run the application.")
+    try {
+        var fs = require("fs")
+        var aria2c_pid = fs.readFileSync("./aria2c.pid", "utf8")
+    } catch (err) {
+        console.error(err)
+        process.exit(1)
+    }
+    var kill = spawn('taskkill', ["/pid", aria2c_pid])
+}
+
+const devMode = process.argv.includes("--dev")
 
 console.log(process.argv)
+console.log(devMode)
 
 if (os.type() == 'Windows_NT') {
     sys_type = "win32"
@@ -20,9 +43,17 @@ if (os.type() == 'Windows_NT') {
 
 function runAria2cRPC() {
     var cmd = spawn("./aria2c", ["--conf-path=./aria2.conf"])
+    console.log(cmd)
     return cmd.pid
 }
 var aria2c_pid = runAria2cRPC()
+var fs = require("fs");
+fs.writeFile("./aria2c.pid", aria2c_pid, "utf8", function (err) {
+    if (!err) {
+        console.log("aria2c.pid saved!");
+    }
+})
+
 
 function createWindow() {
     // 创建浏览器窗口

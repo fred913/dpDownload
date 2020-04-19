@@ -16,6 +16,7 @@
     "electron": "^8.2.2",
     "electron-packager": "^14.2.1",
     "node-cmd": "^3.0.0",
+    "readline-sync": "^1.4.10",
     "websocket": "^1.0.31"
   }
 }
